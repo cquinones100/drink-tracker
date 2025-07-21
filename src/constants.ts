@@ -1,7 +1,4 @@
-import path from "node:path";
 import { IDrink } from "./types";
-
-export const PATH = path.join("./", "db.csv");
 
 export const DRINKS = [
   {

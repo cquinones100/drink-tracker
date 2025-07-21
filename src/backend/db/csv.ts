@@ -1,8 +1,8 @@
 import * as fs from "node:fs/promises";
 import { PATH } from "../constants";
-import { ConsumedDrink, DrinkName } from "../types";
-import { DbDate } from "../utils/db_date";
-import { Db, ParseCallback } from "./db";
+import { ConsumedDrink, DrinkName } from "../../types";
+import { DbDate } from "../../utils/db_date";
+import { Db, ParseCallback } from "../../db/db";
 import { parse } from "csv";
 
 class Csv implements Db {

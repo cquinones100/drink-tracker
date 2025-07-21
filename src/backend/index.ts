@@ -1,6 +1,6 @@
-import { reportToday, saveDrink } from "./db";
+import { reportToday, saveDrink } from "../db";
 import Csv from "./db/csv";
-import { DrinkName } from "./types";
+import { DrinkName } from "../types";
 
 function args(): [DrinkName, number, number | undefined, Date] {
   const [_executablePath, _filePath, drinkName, volume, units, date]  = process.argv
