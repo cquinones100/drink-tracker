@@ -1,8 +1,10 @@
 import { DRINKS } from "./constants";
 
+export const types = ["beer", "wine", "liquor"] as const;
+
 export type IDrink = {
   name: string;
-  type: "beer" | "wine" | "liquor";
+  type: typeof types[number];
   abv: number; 
 }
 
