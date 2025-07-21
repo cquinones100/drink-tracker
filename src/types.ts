@@ -1,4 +1,4 @@
-import { DRINKS } from "./db";
+import { DRINKS } from "./constants";
 
 export type IDrink = {
   name: string;
