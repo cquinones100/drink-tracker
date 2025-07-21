@@ -36,20 +36,26 @@ class Csv implements Db {
 
     const csv = await fs.readFile(PATH);
 
-    parse(csv, (e, records) => {
-      if (e) {
-        throw e;
-      }
+    await new Promise<void>((resolve, reject) => {
+      parse(csv, (e, records) => {
+        if (e) {
+          reject(e);
 
-      callback(records.map((line) => {
-        const [date, drinkName, units] = line;
+          return;
+        }
 
-        return [
-          date as DbDate,
-          drinkName as DrinkName,
-          Number(units),
-        ];
-      }));
+        callback(records.map((line) => {
+          const [date, drinkName, units] = line;
+
+          return [
+            date as DbDate,
+            drinkName as DrinkName,
+            Number(units),
+          ];
+        }));
+
+        resolve();
+      });
     });
   }
 }

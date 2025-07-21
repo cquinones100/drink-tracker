@@ -1,7 +1,7 @@
 import { ConsumedDrink, DrinkName } from "../types";
 import { DbDate } from "../utils/db_date";
 
-type Row = [DbDate, DrinkName, number];
+export type Row = [DbDate, DrinkName, number];
 
 export type ParseCallback = (records: Row[]) => void;
  

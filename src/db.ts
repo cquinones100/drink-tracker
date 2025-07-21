@@ -1,45 +1,103 @@
-import { ConsumedDrink, Drink, DrinkName } from "./types";
+import { ConsumedDrink, DrinkName } from "./types";
 import { DRINKS } from "./constants";
 import { createConsumedDrink } from "./utils/create_consumed_drink";
 import { dbDate } from "./utils/db_date";
-import { Db } from "./db/db";
+import { Db, Row } from "./db/db";
+
+function mapConsumedDrink(record: Row): ConsumedDrink {
+  const [dbDate, drinkName, dbUnits] = record;
+  
+  const drink = findDrink(drinkName);
+  const date = new Date(dbDate);
+  const units = Number(dbUnits);
+
+  return {
+    drink,
+    date,
+    units
+  };
+}
+
+type OrderOptions = {
+  by: "name" | "date";
+  direction?: "asc" | "desc";
+}
+
+type Options = {
+  filters?: {
+    name?: DrinkName;
+    date?: Date;
+  },
+  order?: OrderOptions;
+}
+
+export async function getDrinks(db: Db, options: Options = {}): Promise<ConsumedDrink[]> { 
+  const { filters, order } = options;
+  const { name, date } = filters || {};
+  
+  const drinks: ConsumedDrink[] = [];
+
+  await db.parse((records) => {
+    for (const record of records) {
+      const drink = mapConsumedDrink(record);
+  
+      if (name && drink.drink.name.toLowerCase() !== name.toLowerCase()) {
+        continue;
+      }
+      
+      if (date && dbDate(drink.date) !== dbDate(date)) {
+        continue;
+      }
+  
+      drinks.push(drink);
+    }
+  });
+
+  if (order) {
+    return drinks.sort((a, b) => {
+      const { by } = order;
+      let propA;
+      let propB;
+
+      switch (by) {
+        case "date":
+          propA = a.date;
+          propB = b.date;
+          break;
+        case "name":
+          propA = a.drink.name;
+          propB = b.drink.name;
+      }
+
+      if (propA < propB) {
+        return -1;
+      }
+
+      if (propB < propA) {
+        return 1;
+      }
+
+      return 0;
+    });
+  } else {
+    return drinks;
+  }
+}
 
 export async function saveDrink(db: Db, date: Date, name: DrinkName, volume: number, units = 1) {
   const drink = findDrink(name)
 
-  const consumedDrink = createConsumedDrink(drink, volume, units);
+  const consumedDrink = createConsumedDrink(drink, volume, units, date);
 
   db.saveDrink(consumedDrink, dbDate(date));
 }
 
 export async function reportToday(db: Db) {
-  const todayRecords: ConsumedDrink[] = [];
-
-  const today = dbDate(new Date());
-
-  db.parse((records) => {
-    records.forEach((line) => {
-      const [date, drinkName, units] = line;
-
-      if (date === today) {
-        let drink: Drink;
-  
-        try {
-          drink = findDrink(drinkName as DrinkName);
-  
-          todayRecords.push({
-            drink,
-            units: Number(units)
-          });
-
-        } catch (e) {
-          `${drinkName} is not a valid drink name, please correct this entry in the database\n${line}`;
-        }
-      }
-    });
-
-    console.log(`Total units consumed today: ${todayRecords.reduce((acc, { units }) => acc + units, 0).toFixed(2)}`);
+  const todayRecords = await getDrinks(db, {
+    date: new Date(),
   });
+  
+  console.log(`Total units consumed today: ${todayRecords.reduce((acc, { units }) => acc + units, 0).toFixed(2)}`);
 }
 
 function findDrink(name: DrinkName) {
