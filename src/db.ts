@@ -1,5 +1,5 @@
 import * as fs from "node:fs/promises";
-import { ConsumedDrink, Drink, DrinkName, IDrink } from ".";
+import { ConsumedDrink, Drink, DrinkName, IDrink } from "./types";
 import { parse } from "csv";
 import path from "node:path";
 

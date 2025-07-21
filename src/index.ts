@@ -1,18 +1,5 @@
-import { DRINKS, reportToday, saveDrink } from "./db";
-
-export type IDrink = {
-  name: string;
-  type: "beer" | "wine" | "liquor";
-  abv: number; 
-}
-
-export type Drink = typeof DRINKS[number];
-export type DrinkName = Drink["name"];
-
-export type ConsumedDrink = {
-  drink: Drink;
-  units: number;
-}
+import { reportToday, saveDrink } from "./db";
+import { DrinkName } from "./types";
 
 function args(): [DrinkName, number, number | undefined, Date] {
   const [_executablePath, _filePath, drinkName, volume, units, date]  = process.argv
