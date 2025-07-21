@@ -1,4 +1,5 @@
 import { reportToday, saveDrink } from "./db";
+import Csv from "./db/csv";
 import { DrinkName } from "./types";
 
 function args(): [DrinkName, number, number | undefined, Date] {
@@ -13,10 +14,12 @@ function args(): [DrinkName, number, number | undefined, Date] {
 
 async function main() {
   const [drinkName, volume, units, date] = args();
+
+  const db = new Csv();
   
-  await saveDrink(date, drinkName, volume, units);
+  await saveDrink(db, date, drinkName, volume, units);
   
-  await reportToday();
+  await reportToday(db);
 }
 
 main();

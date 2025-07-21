@@ -1,4 +1,6 @@
-export function dbDate(date: Date) {
+export type DbDate = `${string}-${string}-${string}`;
+
+export function dbDate(date: Date): DbDate {
   function datePartString(number: number, { zeroIndexed = false }: { zeroIndexed?: boolean } = {}) {
     const datePart = zeroIndexed ? number + 1 : number;
   
@@ -9,5 +11,5 @@ export function dbDate(date: Date) {
     }
   }
 
-  return `${datePartString(date.getMonth(), { zeroIndexed: true })}-${datePartString(date.getDate())}-${date.getFullYear()}`
+  return `${datePartString(date.getMonth(), { zeroIndexed: true })}-${datePartString(date.getDate())}-${date.getFullYear()}`;
 }

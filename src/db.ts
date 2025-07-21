@@ -1,47 +1,23 @@
-import * as fs from "node:fs/promises";
 import { ConsumedDrink, Drink, DrinkName } from "./types";
-import { parse } from "csv";
 import { DRINKS } from "./constants";
 import { createConsumedDrink } from "./utils/create_consumed_drink";
 import { dbDate } from "./utils/db_date";
+import { Db } from "./db/db";
 
-export async function saveDrink(date: Date, name: DrinkName, volume: number, units = 1) {
+export async function saveDrink(db: Db, date: Date, name: DrinkName, volume: number, units = 1) {
   const drink = findDrink(name)
-
-  try {
-    await fs.access(PATH)
-  } catch(e) {
-    await fs.writeFile(PATH, "");
-  }
 
   const consumedDrink = createConsumedDrink(drink, volume, units);
 
-  await fs.appendFile(
-    PATH,
-    `${dbDate(date)},${consumedDrink.drink.name},${consumedDrink.units}\n`
-  )
+  db.saveDrink(consumedDrink, dbDate(date));
 }
 
-export async function reportToday() {
-  try { 
-    await fs.access(PATH)
-  } catch(e) {
-    console.log("No data");
-
-    return;
-  }
-
-  const csv = await fs.readFile(PATH);
-
+export async function reportToday(db: Db) {
   const todayRecords: ConsumedDrink[] = [];
 
   const today = dbDate(new Date());
 
-  parse(csv, (e, records) => {
-    if (e) {
-      throw e;
-    }
-
+  db.parse((records) => {
     records.forEach((line) => {
       const [date, drinkName, units] = line;
 
