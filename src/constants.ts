@@ -35,5 +35,20 @@ export const DRINKS = [
     name: "5 boros hazy IPA",
     type: "beer",
     abv: 6.5,
+  },
+  {
+    name: "founders all day IPA",
+    type: "beer",
+    abv: 4.7,
+  },
+  {
+    name: "cocktail",
+    type: "liquor",
+    abv: 40,
+  },
+  {
+    name: "three's brewing good bad news IPA",
+    type: "beer",
+    abv: 7.2,
   }
 ] as const satisfies IDrink[];
