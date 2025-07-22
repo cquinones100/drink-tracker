@@ -4,11 +4,21 @@ import { ConsumedDrink, DrinkName } from "./types";
 import * as React from "react";
 import { DbDate, dbDate } from "./utils/db_date";
 import LocalStorage from "./db/local_storage";
+import "./app.css";
 
 const DRINK_NAMES: DrinkName[] = DRINKS.map(({ name }) => name);
 
 function getDb() {
   return new LocalStorage();
+}
+
+function InputContainer({ label, input }: { label: React.ReactNode, input: React.ReactNode }) {
+  return (
+    <div className="flex justify-between w-full">
+      <div className="flex-1/4">{label}</div>
+      <div className="flex-3/4 *:w-full *:px-2">{input}</div>
+    </div>
+  );
 }
 
 function App() {
@@ -34,7 +44,7 @@ function App() {
     const fetchedDrinks = await getDrinks(db, {
       order: {
         by: "date",
-        direction: "desc", 
+        direction: "desc",
       }
     });
 
@@ -58,57 +68,75 @@ function App() {
   }, {} as Record<DbDate, number>)
 
   return (
-    <>
-      <form id="form" onSubmit={handleSubmit}>
-        <div id="drink-names-container">
-          <label htmlFor="drink-name">Name</label>
-          <select id="drink-name" value={name} onChange={(e) => { setName(e.target.value as DrinkName) }}>
-            {DRINKS.map(({ name: drinkName }) => (
-              <option value={drinkName} key={drinkName}>{drinkName}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="volume">Volume in ounces</label>
-          <input
-            type="number"
-            name="volume"
-            step="0.01"
-            value={volume}
-            onChange={(e) => {
-              if (e.target.value) {
-                setVolume(Number(e.target.value))
-              } else {
-                setVolume("");
-              }
-            }}
-          />
-        </div>
-        <div>
-          <label htmlFor="num-servings">Servings</label>
-          <input
-            type="number"
-            id="num-servings"
-            name="num-servings"
-            value={numServings}
-            onChange={(e) => {
-              if (e.target.value) {
-                setNumServings(Number(e.target.value))
-              } else {
-                setNumServings("")
-              }
-            }}
-          />
-        </div>
-        <div>
-          <label htmlFor="date">Date</label>
-          <input id="date" type="date" value={date} onChange={(e) => { setDate(e.target.value) }} />
-        </div>
-        <input type="submit" />
+    <div className="flex flex-col items-center p-2 gap-2">
+      <form id="form" onSubmit={handleSubmit} className="flex flex-col justify-start items-center max-w-5xl w-full gap-2">
+        <InputContainer
+          label={<label htmlFor="drink-name">Name</label>}
+          input={
+            <select id="drink-name" value={name} onChange={(e) => { setName(e.target.value as DrinkName) }}>
+              {DRINKS.map(({ name: drinkName }) => (
+                <option value={drinkName} key={drinkName}>{drinkName}</option>
+              ))}
+            </select>
+          }
+        >
+        </InputContainer>
+        <InputContainer
+          label={
+            <label htmlFor="volume">Volume</label>
+          }
+          input={
+            <input
+              type="number"
+              name="volume"
+              step="0.01"
+              value={volume}
+              onChange={(e) => {
+                if (e.target.value) {
+                  setVolume(Number(e.target.value))
+                } else {
+                  setVolume("");
+                }
+              }}
+            />
+          }
+        >
+        </InputContainer>
+        <InputContainer
+          label={
+            <label htmlFor="num-servings">Servings</label>
+          }
+          input={
+            <input
+              type="number"
+              id="num-servings"
+              name="num-servings"
+              value={numServings}
+              onChange={(e) => {
+                if (e.target.value) {
+                  setNumServings(Number(e.target.value))
+                } else {
+                  setNumServings("")
+                }
+              }}
+            />
+          }
+        >
+        </InputContainer>
+        <InputContainer
+          label={
+            <label htmlFor="date">Date</label>
+          }
+          input={
+            <input id="date" type="date" value={date} onChange={(e) => { setDate(e.target.value) }} />
+          }
+        >
+        </InputContainer>
+        <input type="submit" className="px-2 cursor-pointer" />
       </form>
       {
         drinks && drinksByDate && (
-          <table>
+          <table className="w-full text-left p-2">
             <thead>
               <tr>
                 <th>Date</th>
@@ -128,7 +156,7 @@ function App() {
           </table>
         )
       }
-    </>
+    </div>
   );
 }
 

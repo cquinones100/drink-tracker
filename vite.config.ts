@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   build: {
@@ -15,5 +16,8 @@ export default defineConfig({
       // Ignore backend directory for HMR/file watching
       ignored: ['**/src/backend/**']
     }
-  }
+  },
+  plugins: [
+    tailwindcss(),
+  ]
 });
