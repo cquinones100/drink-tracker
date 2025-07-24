@@ -11,5 +11,5 @@ export function dbDate(date: Date): DbDate {
     }
   }
 
-  return `${datePartString(date.getMonth(), { zeroIndexed: true })}-${datePartString(date.getDate())}-${date.getFullYear()}`;
+  return `${date.getFullYear()}-${datePartString(date.getMonth(), { zeroIndexed: true })}-${datePartString(date.getDate())}`;
 }

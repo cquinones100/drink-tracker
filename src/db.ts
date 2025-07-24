@@ -5,10 +5,10 @@ import { dbDate } from "./utils/db_date";
 import { Db, Row } from "./db/db";
 
 function mapConsumedDrink(record: Row): ConsumedDrink {
-  const [dbDate, drinkName, dbUnits] = record;
+  const [dateFromDb, drinkName, dbUnits] = record;
   
   const drink = findDrink(drinkName);
-  const date = new Date(dbDate);
+  const date = new Date(dateFromDb);
   const units = Number(dbUnits);
 
   return {
