@@ -92,14 +92,6 @@ export async function saveDrink(db: Db, date: Date, name: DrinkName, volume: num
   db.saveDrink(consumedDrink, dbDate(date));
 }
 
-export async function reportToday(db: Db) {
-  const todayRecords = await getDrinks(db, {
-    date: new Date(),
-  });
-  
-  console.log(`Total units consumed today: ${todayRecords.reduce((acc, { units }) => acc + units, 0).toFixed(2)}`);
-}
-
 function findDrink(name: DrinkName) {
   const drink = DRINKS.find(({ name: currName }) => currName === name);
 
