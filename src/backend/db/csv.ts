@@ -58,6 +58,10 @@ class Csv implements Db {
       });
     });
   }
+
+  async reset() {
+    await fs.writeFile(PATH, "");
+  }
 }
 
 export default Csv;

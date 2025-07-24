@@ -27,6 +27,10 @@ class SessionStorage implements Db {
       ];
     }));
   }
+
+  async reset(): Promise<void> {
+    window.sessionStorage.removeItem('drinks');
+  }
   
   private getDrinks(): string[] {
     return JSON.parse(window.sessionStorage.getItem('drinks') || JSON.stringify([]));

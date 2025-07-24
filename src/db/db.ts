@@ -8,4 +8,5 @@ export type ParseCallback = (records: Row[]) => void;
 export interface Db {
   saveDrink: (drink: ConsumedDrink, date: DbDate) => Promise<void>;
   parse(callback: ParseCallback): Promise<void>;
+  reset(): Promise<void>;
 }

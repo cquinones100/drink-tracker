@@ -27,6 +27,12 @@ class LocalStorage implements Db {
       ];
     }));
   }
+
+  async reset(): Promise<void> {
+    window.localStorage.removeItem('drinks');
+
+    return Promise.resolve();
+  }
   
   private getDrinks(): string[] {
     return JSON.parse(window.localStorage.getItem('drinks') || JSON.stringify([]));

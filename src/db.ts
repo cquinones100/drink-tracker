@@ -101,3 +101,7 @@ function findDrink(name: DrinkName) {
 
   return drink;
 }
+
+export async function reset(db: Db) {
+  await db.reset();
+}

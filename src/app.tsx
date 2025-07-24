@@ -1,5 +1,5 @@
 import { DRINKS } from "./constants";
-import { getDrinks, saveDrink } from "./db";
+import { getDrinks, saveDrink, reset } from "./db";
 import { ConsumedDrink, DrinkName } from "./types";
 import * as React from "react";
 import { DbDate, dbDate } from "./utils/db_date";
@@ -57,6 +57,12 @@ function App() {
     }
   }, [drinks])
 
+  async function handleReset() {
+    const db = new LocalStorage();
+    await reset(db);
+    await fetchDrinks();
+  }
+
   const drinksByDate = drinks?.reduce((acc, curr) => {
     const dateString = dbDate(curr.date);
 
@@ -70,6 +76,7 @@ function App() {
   return (
     <div className="flex flex-col items-center p-2 gap-2">
       <form id="form" onSubmit={handleSubmit} className="flex flex-col justify-start items-center max-w-5xl w-full gap-2">
+        <button className="px-2 cursor-pointer outline border-1" onClick={handleReset}>Reset Database</button>
         <InputContainer
           label={<label htmlFor="drink-name">Name</label>}
           input={
