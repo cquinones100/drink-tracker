@@ -1,8 +1,17 @@
 import { ConsumedDrink, DrinkName } from "./types";
 import { DRINKS } from "./constants";
 import { createConsumedDrink } from "./utils/create_consumed_drink";
-import { dbDate } from "./utils/db_date";
-import { Db, Row } from "./db/db";
+import { DbDate, dbDate } from "./utils/db_date";
+
+export type Row = [DbDate, DrinkName, number];
+
+export type ParseCallback = (records: Row[]) => void;
+ 
+export interface Db {
+  saveDrink: (drink: ConsumedDrink, date: DbDate) => Promise<void>;
+  parse(callback: ParseCallback): Promise<void>;
+  reset(): Promise<void>;
+}
 
 function mapConsumedDrink(record: Row): ConsumedDrink {
   const [dateFromDb, drinkName, dbUnits] = record;

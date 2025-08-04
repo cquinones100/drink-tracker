@@ -1,15 +1,15 @@
-import { ConsumedDrink, DrinkName } from "../types";
-import { DbDate } from "../utils/db_date";
-import { Db, ParseCallback } from "./db";
+import { Db, ParseCallback } from "../../shared/db";
+import { ConsumedDrink, DrinkName } from "../../shared/types";
+import { DbDate } from "../../shared/utils/db_date";
 
-class SessionStorage implements Db {
+class LocalStorage implements Db {
   async saveDrink(drink: ConsumedDrink, date: DbDate) {
     const currentDrinks = this.getDrinks();
     const record = `${date},${drink.drink.name},${drink.units}`;
 
     currentDrinks.push(record);
 
-    window.sessionStorage.setItem('drinks', JSON.stringify(currentDrinks));
+    window.localStorage.setItem('drinks', JSON.stringify(currentDrinks));
 
     return Promise.resolve();
   }
@@ -29,12 +29,18 @@ class SessionStorage implements Db {
   }
 
   async reset(): Promise<void> {
-    window.sessionStorage.removeItem('drinks');
+    window.localStorage.removeItem('drinks');
+
+    return Promise.resolve();
+  }
+
+  async getDrinkTypes() {
+    return Promise.resolve([])
   }
   
   private getDrinks(): string[] {
-    return JSON.parse(window.sessionStorage.getItem('drinks') || JSON.stringify([]));
+    return JSON.parse(window.localStorage.getItem('drinks') || JSON.stringify([]));
   }
 }
 
-export default SessionStorage;
+export default LocalStorage;

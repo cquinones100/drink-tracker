@@ -1,8 +1,8 @@
-import { DRINKS } from "./constants";
-import { getDrinks, saveDrink, reset } from "./db";
-import { ConsumedDrink, DrinkName } from "./types";
+import { DRINKS } from "./../shared/constants";
+import { getDrinks, saveDrink, reset } from "../shared/db";
+import { ConsumedDrink, DrinkName } from "../shared/types";
 import * as React from "react";
-import { DbDate, dbDate } from "./utils/db_date";
+import { DbDate, dbDate } from "../shared/utils/db_date";
 import LocalStorage from "./db/local_storage";
 import "./app.css";
 
