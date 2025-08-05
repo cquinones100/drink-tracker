@@ -1,3 +1,6 @@
 dist
+backend-dist
+database.db
 node_modules
 db.csv
+.env

@@ -1,6 +1,4 @@
-import { reportToday, saveDrink } from "../db";
-import Csv from "./db/csv";
-import { DrinkName } from "../types";
+import { DrinkName } from "../shared/types";
 
 function args(): [DrinkName, number, number | undefined, Date] {
   const [_executablePath, _filePath, drinkName, volume, units, date]  = process.argv
@@ -14,12 +12,6 @@ function args(): [DrinkName, number, number | undefined, Date] {
 
 async function main() {
   const [drinkName, volume, units, date] = args();
-
-  const db = new Csv();
-  
-  await saveDrink(db, date, drinkName, volume, units);
-  
-  await reportToday(db);
 }
 
 main();

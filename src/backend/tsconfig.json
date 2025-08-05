@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../backend-dist" /* Specify an output folder for all emitted files. */,
+    "esModuleInterop": true
+  },
+  "include": ["./**/*"],
+  "exclude": ["node_modules", "../client"],
+  "tsc-alias": {
+    "verbose": false,
+    "resolveFullPaths": true,
+  }
+}

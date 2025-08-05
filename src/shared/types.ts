@@ -8,7 +8,12 @@ export type IDrink = {
   abv: number; 
 }
 
-export type Drink = typeof DRINKS[number];
+export type Drink = {
+  name: string;
+  type: typeof types[number];
+  abv: number; 
+}
+
 export type DrinkName = Drink["name"];
 
 export type ConsumedDrink = {

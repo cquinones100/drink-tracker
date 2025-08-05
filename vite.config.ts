@@ -15,7 +15,8 @@ export default defineConfig({
     watch: {
       // Ignore backend directory for HMR/file watching
       ignored: ['**/src/backend/**']
-    }
+    },
+    allowedHosts: ['drink-tracker-local.cquinones.com'],
   },
   plugins: [
     tailwindcss(),
