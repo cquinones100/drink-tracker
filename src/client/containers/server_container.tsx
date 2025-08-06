@@ -8,7 +8,7 @@ type ContextType = {
 }
 
 export const ServerContext = React.createContext<ContextType>({
-  serverRequest: (() => { }) as unknown as ContextType['serverRequest'],
+  serverRequest: (() => { throw "Not within Server Context" }) as unknown as ContextType['serverRequest'],
 });
 
 function ServerContainer({ children }: { children: React.ReactNode }) {

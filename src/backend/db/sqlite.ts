@@ -1,6 +1,7 @@
 import sqlite3 from "sqlite3";
 import { Db, DbConsumedDrink, DbDrink, DbDrinkType } from "../../shared/db";
 import { calculateUnits } from "../../shared/utils/calculate_units";
+import { Drink } from "../../shared/types";
 
 export const DATABASE_FILE = 'database.db';
 
@@ -30,7 +31,7 @@ class Sqlite implements Db {
       statement.run(drinkId, volume, date);
     }
   }
-  
+
   async getConsumedDrinks() {
     const consumedDrinks = await this.read<DbConsumedDrink & DbDrink & { drink_type_name: DbDrinkType['name'] }>(`
       SELECT consumed_drinks.id, drink_id, volume, date, drinks.name, abv, drink_types.name as drink_type_name
@@ -90,6 +91,30 @@ class Sqlite implements Db {
     });
   }
 
+  async createDrink(props: Drink): Promise<DbDrink> {
+    const { name, abv, type } = props;
+    const drinkTypes = await this.getDrinkTypes();
+    const type_id = drinkTypes.find((drinkType) => type === drinkType.name)?.id;
+
+    if (!type_id) {
+      throw "No type found";
+    }
+
+    const rawStatement = 'INSERT INTO drinks (name, abv, type_id) VALUES (?,?,?) RETURNING *';
+    const values = [name, abv, type_id]
+
+    const statementString = `${rawStatement}, ${values}`;
+    this.print(statementString);
+
+    const statement = this.db.prepare(rawStatement);
+
+    return new Promise<DbDrink>((resolve) => {
+      statement.get(...values, (err: any, drink: DbDrink) => {
+        resolve(drink);
+      });
+    })
+  }
+
   async serialize(cb: () => Promise<void>) {
     this.db.serialize(cb);
   };
@@ -108,6 +133,7 @@ class Sqlite implements Db {
         if (err) {
           throw err;
         }
+
         resolve(rows);
       });
     });

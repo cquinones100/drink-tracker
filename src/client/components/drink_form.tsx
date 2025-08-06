@@ -13,7 +13,14 @@ function DrinkForm() {
   const [date, setDate] = React.useState<string>(dbDate(new Date()));
   const [numServings, setNumServings] = React.useState<number | "">(1);
 
+  const [newName, setNewName] = React.useState<string>("");
+  const [abv, setAbv] = React.useState<number | "">("");
+
   const { serverRequest } = React.useContext(ServerContext);
+
+  const isNewDrink = name === "new";
+
+  console.log(date);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -26,7 +33,9 @@ function DrinkForm() {
           name,
           volume,
           numServings,
-          date: date
+          date: date,
+          isNew: isNewDrink, 
+          abv: abv || 0,
         })
       });
 
@@ -56,6 +65,7 @@ function DrinkForm() {
       const drinks = await db.getDrinks();
 
       setDrinkNames(drinks.map((drink) => drink.name));
+      setName(drinks[0]!.name);
     });
   }
 
@@ -64,10 +74,6 @@ function DrinkForm() {
       fetchDrinks();
     }
   }, [drinkNames])
-
-  async function handleReset() {
-    await fetchConsumedDrinks();
-  }
 
   const drinksByDate = drinks?.reduce((acc, curr) => {
     const dateString = curr.date.toISOString();
@@ -82,18 +88,59 @@ function DrinkForm() {
   return (
     <>
       <form id="form" onSubmit={handleSubmit} className="flex flex-col justify-start items-center max-w-5xl w-full gap-2">
-        <button className="px-2 cursor-pointer outline border-1" onClick={handleReset}>Reset Database</button>
         <InputContainer
-          label={<label htmlFor="drink-name">Name</label>}
+          label={<label htmlFor="drink-name">{!isNewDrink && "Name"}</label>}
           input={
             <select id="drink-name" value={name} onChange={(e) => { setName(e.target.value as DrinkName) }}>
               {drinkNames?.map((name) => (
                 <option value={name} key={name}>{name}</option>
               ))}
+              <option value="new">New</option>
             </select>
           }
         >
         </InputContainer>
+        {
+          isNewDrink && (
+            <>
+              <InputContainer
+                label={
+                  <label htmlFor="new-name">Name</label>
+                }
+                input={
+                  <input
+                    type="text"
+                    name="new-name"
+                    value={newName}
+                    onChange={(e) => {
+                      setNewName(e.target.value)
+                    }}
+                  />
+                }
+              />
+              <InputContainer
+                label={
+                  <label htmlFor="abv">Abv</label>
+                }
+                input={
+                  <input
+                    type="number"
+                    name="abv"
+                    step="0.01"
+                    value={abv}
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        setAbv(Number(e.target.value))
+                      } else {
+                        setAbv("");
+                      }
+                    }}
+                  />
+                }
+              />
+            </>
+          )
+        }
         <InputContainer
           label={
             <label htmlFor="volume">Volume</label>
