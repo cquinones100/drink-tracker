@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:backend": "tsc --project src/backend/tsconfig.json && tsc-alias -p src/backend/tsconfig.json",
     "backend": "npm run build:backend && node backend-dist/src/backend/server.js",
-    "db:setup": "npm run build:backend && node backend-dist/src/backend/db/setup.js"
+    "db:setup": "npm run build:backend && node backend-dist/src/backend/db/setup.js",
+    "db:run_script": "npm run build:backend && node backend-dist/src/backend/db/scripts/${npm_config_file}.js"
   },
   "author": "",
   "license": "ISC",

@@ -4,3 +4,4 @@ database.db
 node_modules
 db.csv
 .env
+src/backend/db/scripts
