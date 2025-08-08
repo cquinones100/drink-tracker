@@ -19,5 +19,5 @@ export type DrinkName = Drink["name"];
 export type ConsumedDrink = {
   drink: Drink;
   units: number;
-  date: Date;
+  date: string;
 }

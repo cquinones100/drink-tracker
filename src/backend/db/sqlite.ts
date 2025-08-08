@@ -51,7 +51,7 @@ class Sqlite implements Db {
       return {
         drink,
         units: calculateUnits(drink, consumedDrink.volume),
-        date: new Date(consumedDrink.date),
+        date: consumedDrink.date,
       }
     });
   }

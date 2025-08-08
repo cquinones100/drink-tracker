@@ -76,7 +76,7 @@ function DrinkForm() {
   }, [drinkNames])
 
   const drinksByDate = drinks?.reduce((acc, curr) => {
-    const dateString = curr.date.toISOString();
+    const dateString = curr.date.split("T")[0]!;
 
     acc[dateString] ||= 0;
 
@@ -207,7 +207,7 @@ function DrinkForm() {
               {Object.keys(drinksByDate).map((date) => {
                 return (
                   <tr key={date}>
-                    <td>{(new Date(date)).toLocaleDateString()}</td>
+                    <td>{date}</td>
                     <td>{drinksByDate[date]?.toFixed(2)}</td>
                   </tr>
                 );

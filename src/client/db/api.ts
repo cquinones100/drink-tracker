@@ -67,7 +67,7 @@ class Api implements Db {
 
     return consumedDrinks.map(({date, ...drink}) => ({
       ...drink,
-      date: new Date(date),
+      date,
     }));
   }
 
