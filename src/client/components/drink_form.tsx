@@ -4,6 +4,7 @@ import { ServerContext } from "../containers/server_container";
 import { getDb } from "../db/get_db";
 import InputContainer from "../library/input_container";
 import { dbDate } from "../../shared/utils/db_date";
+import { DbDrinkType } from "../../shared/db";
 
 function DrinkForm() {
   const [drinkNames, setDrinkNames] = React.useState<DrinkName[]>();
@@ -12,6 +13,8 @@ function DrinkForm() {
   const [drinks, setDrinks] = React.useState<ConsumedDrink[]>();
   const [date, setDate] = React.useState<string>(dbDate(new Date()));
   const [numServings, setNumServings] = React.useState<number | "">(1);
+  const [drinkTypes, setDrinkTypes] = React.useState<DbDrinkType[]>();
+  const [drinkType, setDrinkType] = React.useState<Omit<DbDrinkType, 'id'>['name']>();
 
   const [newName, setNewName] = React.useState<string>("");
   const [abv, setAbv] = React.useState<number | "">("");
@@ -19,8 +22,6 @@ function DrinkForm() {
   const { serverRequest } = React.useContext(ServerContext);
 
   const isNewDrink = name === "new";
-
-  console.log(date);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -30,12 +31,13 @@ function DrinkForm() {
     if (name && volume && numServings && date) {
       await serverRequest(async () => {
         await db.saveDrink({
-          name,
+          name: isNewDrink ? newName : name,
           volume,
           numServings,
           date: date,
           isNew: isNewDrink, 
           abv: abv || 0,
+          ...(drinkType ? { type: drinkType } : {})
         })
       });
 
@@ -55,6 +57,22 @@ function DrinkForm() {
   React.useEffect(() => {
     if (!drinks) {
       fetchConsumedDrinks();
+    }
+  }, [drinks])
+
+  async function fetchDrinkTypes() {
+    const db = getDb();
+
+    await serverRequest(async () => {
+      const types = await db.getDrinkTypes();
+
+      setDrinkTypes(types);
+    });
+  }
+
+  React.useEffect(() => {
+    if (!drinkTypes) {
+      fetchDrinkTypes();
     }
   }, [drinks])
 
@@ -84,6 +102,8 @@ function DrinkForm() {
 
     return acc;
   }, {} as Record<string, number>)
+
+  console.log(drinkTypes);
 
   return (
     <>
@@ -116,6 +136,17 @@ function DrinkForm() {
                       setNewName(e.target.value)
                     }}
                   />
+                }
+              />
+              <InputContainer
+                label={<label htmlFor="drink-type">{"Type"}</label>}
+                input={
+                  <select id="drink-type" value={drinkType} onChange={(e) => { setDrinkType(e.target.value as Omit<DbDrinkType, 'id'>['name']) }}>
+                    {drinkTypes?.map(({ name }) => (
+                      <option value={name} key={name}>{name}</option>
+                    ))}
+                    <option value="new">New</option>
+                  </select>
                 }
               />
               <InputContainer

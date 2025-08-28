@@ -80,6 +80,14 @@ app.get('/drinks', async (_req, res) => {
   res.json(await db.getDrinks());
 });
 
+app.get('/drink_types', async (_req, res) => {
+  const db = new Sqlite();
+
+  const drinkTypes = await db.getDrinkTypes();
+
+  res.json(drinkTypes);
+});
+
 type SubmitBody = {
   name: string;
   volume: number;

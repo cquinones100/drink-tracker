@@ -23,14 +23,15 @@ const URL = "/api";
 
 class Api implements Db {
   async saveDrink(props: {
-    name: string,
-    volume: number,
-    date: string,
-    numServings: number,
-    isNew: boolean,
-    abv: number,
+    name: string;
+    volume: number;
+    date: string;
+    numServings: number;
+    isNew: boolean;
+    abv: number;
+    type?: DbDrinkType['name'];
   }): Promise<void> {
-    const { name, volume, numServings, date, isNew, abv } = props;
+    const { name, volume, numServings, date, isNew, abv, type } = props;
   
     const res = await this.fetch(`${URL}/submit`, {
       method: "POST",
@@ -41,6 +42,7 @@ class Api implements Db {
         date,
         isNew,
         abv,
+        type,
       }),
       headers: {
         "content-type": "application/json"
@@ -72,7 +74,15 @@ class Api implements Db {
   }
 
   async getDrinkTypes(): Promise<DbDrinkType[]> {
-    throw "Not implemented";
+    const res = await this.fetch(`${URL}/drink_types`);
+
+    if (res.ok) {
+      const drinkTypes = await res.json() as DbDrinkType[];
+
+      return drinkTypes;
+    }
+
+    throw 'Unable to get drink types';
   };
 
   async getDrinks(): Promise<DbDrink[]> {
