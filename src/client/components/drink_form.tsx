@@ -35,7 +35,7 @@ function DrinkForm() {
           volume,
           numServings,
           date: date,
-          isNew: isNewDrink, 
+          isNew: isNewDrink,
           abv: abv || 0,
           ...(drinkType ? { type: drinkType } : {})
         })
