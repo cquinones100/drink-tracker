@@ -26,6 +26,7 @@ function ServerContainer({ children }: { children: React.ReactNode }) {
       } else if (e instanceof NotFoundError) {
         setNotFoundError(e);
       } else {
+        console.error(e);
         setUnexpectedError(e as Error);
       }
 
