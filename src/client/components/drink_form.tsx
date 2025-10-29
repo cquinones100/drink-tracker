@@ -69,6 +69,11 @@ function DrinkForm() {
       const types = await db.getDrinkTypes();
 
       setDrinkTypes(types);
+      const firstDrinkType = types[0];
+
+      if (firstDrinkType) {
+        setDrinkType(firstDrinkType.name);
+      }
     });
   }
 
