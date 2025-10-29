@@ -42,6 +42,8 @@ function DrinkForm() {
       });
 
       await fetchConsumedDrinks();
+      await fetchDrinkTypes();
+      await fetchDrinks();
     }
   }
 
