@@ -57,11 +57,11 @@ class Sqlite implements Db {
   }
 
   async getDrinkTypes() {
-    return await this.read<DbDrinkType>('SELECT * FROM drink_types');
+    return await this.read<DbDrinkType>('SELECT * FROM drink_types order by name asc');
   }
 
   async getDrinks() {
-    return await this.read<DbDrink>('SELECT * FROM drinks');
+    return await this.read<DbDrink>('SELECT * FROM drinks order by name asc');
   }
 
   async getDrink(filter?: { name: string }): Promise<DbDrink> {
